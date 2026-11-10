@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeepShip.dev — AI-Powered Software Engineering</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #0f1117;
+      --bg2:       #161b25;
+      --bg3:       #1c2333;
+      --accent:    #00d4ff;
+      --accent2:   #7c3aed;
+      --green:     #00e676;
+      --red:       #ff4444;
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --border:    #2d3748;
+      --card:      #1a2035;
+      --glow:      0 0 40px rgba(0,212,255,.18);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+    /* ── NAV ──────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(15,17,23,.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-size: 1.35rem; font-weight: 800; letter-spacing: -.5px; color: var(--accent); text-decoration: none; }
+    .logo span { color: var(--text); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: .9rem; transition: color .2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta {
+      background: var(--accent); color: #000; border: none;
+      padding: .55rem 1.4rem; border-radius: 8px; font-weight: 700;
+      cursor: pointer; font-size: .9rem; transition: transform .2s, box-shadow .2s;
+    }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: var(--glow); }
+
+    /* ── HERO ─────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    #hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes gridMove {
+      0%   { background-position: 0 0; }
+      100% { background-position: 60px 60px; }
+    }
+    .hero-glow {
+      position: absolute; top: 20%; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 400px;
+      background: radial-gradient(ellipse, rgba(0,212,255,.12) 0%, transparent 70%);
+      pointer-events: none;
+      animation: pulse 4s ease-in-out infinite alternate;
+    }
+    @keyframes pulse {
+      from { opacity: .6; transform: translateX(-50%) scale(1); }
+      to   { opacity: 1;  transform: translateX(-50%) scale(1.1); }
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(0,212,255,.1); border: 1px solid rgba(0,212,255,.3);
+      color: var(--accent); padding: .4rem 1rem; border-radius: 999px;
+      font-size: .8rem; font-weight: 600; margin-bottom: 2rem;
+      animation: fadeDown .6s ease both;
+      position: relative; z-index: 1;
+    }
+    .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: blink 1.5s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+    @keyframes fadeDown { from { opacity:0; transform: translateY(-16px); } to { opacity:1; transform: translateY(0); } }
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      font-weight: 900; line-height: 1.1; letter-spacing: -2px;
+      max-width: 900px; animation: fadeUp .7s .1s ease both;
+      position: relative; z-index: 1;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-sub {
+      font-size: 1.2rem; color: var(--muted); max-width: 620px;
+      margin: 1.5rem auto 2.5rem; animation: fadeUp .7s .2s ease both;
+      position: relative; z-index: 1;
+    }
+    .hero-buttons {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      animation: fadeUp .7s .3s ease both; position: relative; z-index: 1;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; border: none; padding: .85rem 2.2rem;
+      border-radius: 10px; font-weight: 700; font-size: 1rem;
+      cursor: pointer; transition: transform .2s, box-shadow .2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(0,212,255,.3); }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border); padding: .85rem 2.2rem;
+      border-radius: 10px; font-weight: 600; font-size: 1rem;
+      cursor: pointer; transition: border-color .2s, color .2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+
+    /* ── COMPARE ──────────────────────────────────────────── */
+    #compare {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      gap: 0; max-width: 800px; margin: 4rem auto 0;
+      animation: fadeUp .7s .4s ease both;
+      position: relative; z-index: 1; width: 100%;
+    }
+    .compare-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem 2.5rem; text-align: center;
+    }
+    .compare-card.them { opacity: .6; }
+    .compare-card.us   { border-color: var(--accent); box-shadow: var(--glow); }
+    .compare-label { font-size: .75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+    .compare-price { font-size: 3rem; font-weight: 900; letter-spacing: -2px; }
+    .compare-price.red  { color: var(--red); text-decoration: line-through; }
+    .compare-price.green{ color: var(--green); }
+    .compare-time { font-size: 1rem; color: var(--muted); margin-top: .3rem; }
+    .vs { display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; color: var(--muted); padding: 0 1rem; }
+
+    /* ── SECTIONS ─────────────────────────────────────────── */
+    .section-wrap { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: .75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: .8rem; }
+    .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; letter-spacing: -1px; margin-bottom: 1rem; }
+    .section-sub { color: var(--muted); max-width: 580px; }
+
+    /* ── STATS ────────────────────────────────────────────── */
+    #stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 4rem; }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem 1.5rem; text-align: center;
+      transition: transform .3s, border-color .3s; position: relative; overflow: hidden;
+    }
+    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+    .stat-card:hover { transform: translateY(-6px); border-color: var(--accent); }
+    .stat-num {
+      font-size: 2.8rem; font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .stat-label { color: var(--muted); font-size: .9rem; margin-top: .4rem; }
+
+    /* ── FEATURES ─────────────────────────────────────────── */
+    #features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .feat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem;
+      transition: transform .3s, border-color .3s, box-shadow .3s;
+    }
+    .feat-card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: var(--glow); }
+    .feat-icon { font-size: 2rem; margin-bottom: 1rem; display: inline-block; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .feat-card:nth-child(2) .feat-icon{animation-delay:.5s}
+    .feat-card:nth-child(3) .feat-icon{animation-delay:1s}
+    .feat-card:nth-child(4) .feat-icon{animation-delay:1.5s}
+    .feat-card:nth-child(5) .feat-icon{animation-delay:2s}
+    .feat-card:nth-child(6) .feat-icon{animation-delay:2.5s}
+    .feat-title { font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+    .feat-desc  { color: var(--muted); font-size: .9rem; }
+
+    /* ── TERMINAL ─────────────────────────────────────────── */
+    #terminal-section {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2rem;
+    }
+    .terminal-wrap { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    .terminal { background: #0d1117; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-family: 'Cascadia Code','Fira Code',monospace; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+    .terminal-bar { background: var(--bg3); padding: .7rem 1rem; display: flex; align-items: center; gap: .5rem; }
+    .dot-r{width:12px;height:12px;border-radius:50%;background:#ff5f57}
+    .dot-y{width:12px;height:12px;border-radius:50%;background:#febc2e}
+    .dot-g{width:12px;height:12px;border-radius:50%;background:#28c840}
+    .terminal-title { margin-left: auto; font-size: .75rem; color: var(--muted); font-family: inherit; }
+    .terminal-body { padding: 1.5rem; min-height: 320px; font-size: .82rem; line-height: 1.8; }
+    .line { display: block; opacity: 0; }
+    .line.show { animation: lineIn .3s ease forwards; }
+    @keyframes lineIn { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+    .c-green  { color: #00e676; }
+    .c-cyan   { color: #00d4ff; }
+    .c-yellow { color: #ffd740; }
+    .c-muted  { color: #4a5568; }
+    .c-white  { color: #e2e8f0; }
+    .c-purple { color: #c084fc; }
+    .cursor { display: inline-block; width: 8px; height: 14px; background: var(--accent); animation: blink 1s step-end infinite; vertical-align: middle; }
+
+    /* ── CLOUD ────────────────────────────────────────────── */
+    #clouds { background: var(--bg2); padding: 4rem 2rem; border-bottom: 1px solid var(--border); }
+    .cloud-label { text-align: center; color: var(--muted); font-size: .8rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 2.5rem; }
+    .cloud-logos { display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+    .cloud-pill {
+      display: flex; align-items: center; gap: .7rem;
+      background: var(--card); border: 1px solid var(--border);
+      padding: .8rem 1.8rem; border-radius: 999px; font-weight: 700; font-size: .95rem;
+      transition: border-color .3s, box-shadow .3s, transform .3s;
+    }
+    .cloud-pill:hover { border-color: var(--accent); box-shadow: var(--glow); transform: translateY(-3px); }
+    .cloud-pill .icon { font-size: 1.4rem; }
+
+    /* ── TIMELINE ─────────────────────────────────────────── */
+    .timeline-section-wrap { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .timeline-inner { max-width: 800px; margin: 0 auto; padding: 6rem 2rem; }
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:linear-gradient(to bottom,var(--accent),var(--accent2)); }
+    .tl-item { position: relative; margin-bottom: 2.5rem; padding-left: 1.5rem; }
+    .tl-dot { position:absolute; left:-2.4rem; top:.3rem; width:14px; height:14px; border-radius:50%; background:var(--accent); border:2px solid var(--bg); box-shadow:0 0 10px var(--accent); }
+    .tl-week { font-size:.75rem; color:var(--accent); font-weight:700; letter-spacing:2px; text-transform:uppercase; }
+    .tl-desc { font-size:1rem; color:var(--text); margin-top:.2rem; font-weight:600; }
+    .tl-sub  { font-size:.85rem; color:var(--muted); margin-top:.2rem; }
+
+    /* ── CTA ──────────────────────────────────────────────── */
+    #cta-section {
+      text-align: center; padding: 7rem 2rem;
+      background: var(--bg2); border-top: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    #cta-section::before { content:''; position:absolute; bottom:-100px; left:50%; transform:translateX(-50%); width:600px; height:400px; background:radial-gradient(ellipse, rgba(124,58,237,.2) 0%, transparent 70%); pointer-events:none; }
+    #cta-section h2 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900; letter-spacing: -1px; margin-bottom: 1rem; }
+    #cta-section p  { color: var(--muted); margin-bottom: 2rem; font-size: 1.05rem; }
+
+    footer { background: var(--bg); border-top: 1px solid var(--border); text-align: center; padding: 2rem; color: var(--muted); font-size: .85rem; }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── SCROLL REVEAL ────────────────────────────────────── */
+    .reveal { opacity:0; transform: translateY(30px); transition: opacity .6s, transform .6s; }
+    .reveal.visible { opacity:1; transform: translateY(0); }
+
+    @media(max-width:768px) {
+      .terminal-wrap { grid-template-columns: 1fr; }
+      #compare { grid-template-columns: 1fr; }
+      .vs { display: none; }
+      nav { padding: 1rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">deep<span>ship</span>.dev</a>
+  <ul class="nav-links">
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#features">What We Build</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#cta-section">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('cta-section').scrollIntoView({behavior:'smooth'})">Get Started</button>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-glow"></div>
+  <div class="badge">
+    <span class="dot"></span>
+    AI-Native Engineering Studio &nbsp;&middot;&nbsp; Now Accepting Projects
+  </div>
+  <h1>
+    Ship in <span class="gradient-text" id="typewriter">1 Week</span><br/>
+    What Takes Others 4 Months
+  </h1>
+  <p class="hero-sub">
+    deepship.dev builds enterprise-grade, large-scale distributed systems —
+    high throughput, low latency, battle-tested — at a fraction of traditional cost and time.
+  </p>
+  <div class="hero-buttons">
+    <a href="#cta-section" class="btn-primary">Start Your Project</a>
+    <a href="#features" class="btn-outline">See What We Build</a>
+  </div>
+
+  <div id="compare">
+    <div class="compare-card them">
+      <div class="compare-label">Traditional Agency</div>
+      <div class="compare-price red">$100K+</div>
+      <div class="compare-time">4 - 6 Months</div>
+    </div>
+    <div class="vs">VS</div>
+    <div class="compare-card us">
+      <div class="compare-label">deepship.dev</div>
+      <div class="compare-price green">$5K</div>
+      <div class="compare-time">1 Week</div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div id="why">
+  <div class="section-wrap">
+    <div class="section-label">The Numbers</div>
+    <h2 class="section-title">Why Founders Choose deepship</h2>
+    <p class="section-sub">We don't just write code — we ship production-ready systems, tested and deployed.</p>
+    <div id="stats-row">
+      <div class="stat-card reveal"><div class="stat-num" data-target="20">0x</div><div class="stat-label">Faster than traditional teams</div></div>
+      <div class="stat-card reveal"><div class="stat-num" data-target="95">0</div><div class="stat-label">% Cost reduction vs. agencies</div></div>
+      <div class="stat-card reveal"><div class="stat-num" data-target="99">0</div><div class="stat-label">% SLA on delivered systems</div></div>
+      <div class="stat-card reveal"><div class="stat-num" data-target="1">0</div><div class="stat-label">Week to production MVP</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TERMINAL -->
+<div id="terminal-section">
+  <div class="terminal-wrap">
+    <div>
+      <div class="section-label">Under the Hood</div>
+      <h2 class="section-title">AI doing the heavy lifting — instantly.</h2>
+      <p style="color:var(--muted);margin-top:1rem;line-height:1.8;">Our AI agents write code, run tests, provision infrastructure, configure CI/CD pipelines, and perform stress and functional tests — all in a single sprint.</p>
+      <div style="margin-top:2rem;display:flex;flex-direction:column;gap:.8rem;">
+        <div style="display:flex;align-items:center;gap:.7rem;"><span style="color:var(--green);font-size:1.2rem;">&#10003;</span> Microservices + Event-driven architecture</div>
+        <div style="display:flex;align-items:center;gap:.7rem;"><span style="color:var(--green);font-size:1.2rem;">&#10003;</span> Auto-scaling Kubernetes clusters</div>
+        <div style="display:flex;align-items:center;gap:.7rem;"><span style="color:var(--green);font-size:1.2rem;">&#10003;</span> Load and chaos testing baked in</div>
+        <div style="display:flex;align-items:center;gap:.7rem;"><span style="color:var(--green);font-size:1.2rem;">&#10003;</span> CI/CD pipelines on day 1</div>
+      </div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div>
+        <span class="terminal-title">deepship-agent &middot; deploy.sh</span>
+      </div>
+      <div class="terminal-body" id="term-body">
+        <span class="cursor"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CLOUD -->
+<div id="clouds">
+  <div class="cloud-label">CI/CD baked in for all major clouds</div>
+  <div class="cloud-logos">
+    <div class="cloud-pill"><span class="icon">&#128311;</span> Azure</div>
+    <div class="cloud-pill"><span class="icon">&#128992;</span> AWS</div>
+    <div class="cloud-pill"><span class="icon">&#128309;</span> GCP</div>
+    <div class="cloud-pill"><span class="icon">&#128051;</span> Docker</div>
+    <div class="cloud-pill"><span class="icon">&#9096;</span> Kubernetes</div>
+    <div class="cloud-pill"><span class="icon">&#128260;</span> GitHub Actions</div>
+    <div class="cloud-pill"><span class="icon">&#128737;</span> Terraform</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div id="features">
+  <div class="section-wrap">
+    <div class="section-label">Capabilities</div>
+    <h2 class="section-title">Not Mom-and-Pop Apps.<br/>Enterprise-Grade Systems.</h2>
+    <p class="section-sub">We build the kind of software that handles millions of requests, never goes down, and scales globally.</p>
+    <div id="features-grid">
+      <div class="feat-card reveal"><div class="feat-icon">&#9889;</div><div class="feat-title">Low Latency, High Throughput</div><div class="feat-desc">Sub-millisecond response times. Event-driven pipelines designed to handle millions of concurrent users without breaking a sweat.</div></div>
+      <div class="feat-card reveal"><div class="feat-icon">&#127959;</div><div class="feat-title">Distributed Architecture</div><div class="feat-desc">Microservices, CQRS, event sourcing, and saga patterns — the right architecture for your scale, designed from day one.</div></div>
+      <div class="feat-card reveal"><div class="feat-icon">&#128300;</div><div class="feat-title">Battle-Tested Quality</div><div class="feat-desc">Every system ships with stress tests, load tests, chaos engineering runs, and functional test suites. We break it before you do.</div></div>
+      <div class="feat-card reveal"><div class="feat-icon">&#128640;</div><div class="feat-title">CI/CD from Day 1</div><div class="feat-desc">Pipelines on Azure DevOps, GitHub Actions, or GCP Cloud Build — automated builds, tests, and blue/green deployments out of the box.</div></div>
+      <div class="feat-card reveal"><div class="feat-icon">&#129302;</div><div class="feat-title">AI-Accelerated Development</div><div class="feat-desc">Our proprietary AI agents write, review, and test code in parallel. What takes a team of 10 four months — we do in a week.</div></div>
+      <div class="feat-card reveal"><div class="feat-icon">&#128274;</div><div class="feat-title">Security and Compliance</div><div class="feat-desc">OWASP-hardened APIs, IAM policies, secrets management, and audit logging. Enterprise security without enterprise delays.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div id="process" class="timeline-section-wrap">
+  <div class="timeline-inner">
+    <div class="section-label reveal">The Process</div>
+    <h2 class="section-title reveal">From Idea to Production in 7 Days</h2>
+    <p class="section-sub reveal" style="margin-bottom:3rem;">No waterfall. No sprint ceremonies. Just relentless shipping.</p>
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Day 1</div>
+        <div class="tl-desc">Architecture Design and AI Agent Kickoff</div>
+        <div class="tl-sub">System design, tech-stack selection, AI agents briefed and scaffolding generated</div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Day 2 - 3</div>
+        <div class="tl-desc">Core Services Built and Unit Tested</div>
+        <div class="tl-sub">All microservices coded and unit-tested in parallel by AI agents</div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Day 4</div>
+        <div class="tl-desc">Integration, CI/CD Pipeline and Cloud Infra Provisioned</div>
+        <div class="tl-sub">Terraform provisions Azure / AWS / GCP infra. GitHub Actions pipelines live.</div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Day 5 - 6</div>
+        <div class="tl-desc">Stress Tests, Load Tests and Chaos Engineering</div>
+        <div class="tl-sub">k6 / Locust stress tests run. Chaos Monkey kills pods. Issues fixed in hours.</div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Day 7</div>
+        <div class="tl-desc">Production Deployment and Handoff</div>
+        <div class="tl-sub">Blue/green deploy to production. Full docs, runbooks, and monitoring dashboards handed over.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div id="cta-section">
+  <h2>Ready to <span class="gradient-text">10x Your Engineering?</span></h2>
+  <p>Tell us what you are building. We will scope it in 24 hours and start in 48.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="mailto:hello@deepship.dev" class="btn-primary">hello@deepship.dev</a>
+    <a href="https://deepship.dev" class="btn-outline" target="_blank">Visit deepship.dev</a>
+  </div>
+  <p style="margin-top:2rem;font-size:.85rem;color:var(--muted);">No retainers. No bloat. Pay per project. Cancel any time.</p>
+</div>
+
+<footer>
+  <p>2026 deepship.dev &nbsp;&middot;&nbsp; Built with AI, deployed with intent &nbsp;&middot;&nbsp; <a href="mailto:hello@deepship.dev">hello@deepship.dev</a></p>
+</footer>
+
+<script>
+/* ── Terminal animation ───────────────────────────────── */
+const lines = [
+  ['c-muted',   '$ deepship init --project="payments-api"'],
+  ['c-cyan',    '> Analyzing requirements...'],
+  ['c-green',   '+ Architecture: Microservices + Kafka'],
+  ['c-green',   '+ Stack: Node.js / Go / PostgreSQL / Redis'],
+  ['c-cyan',    '> Scaffolding 14 services with AI agents...'],
+  ['c-yellow',  '@ [████████████████████] 14/14 done'],
+  ['c-green',   '+ Unit tests: 847 written, 847 passing'],
+  ['c-cyan',    '> Provisioning infra (Terraform + GCP)...'],
+  ['c-green',   '+ GKE cluster live, 3 nodes, auto-scaling ON'],
+  ['c-green',   '+ Cloud SQL provisioned, read replicas: 2'],
+  ['c-green',   '+ CI/CD: GitHub Actions -> GKE configured'],
+  ['c-cyan',    '> Running stress tests (k6 — 10,000 VU)...'],
+  ['c-yellow',  '@ Ramping: 1k -> 5k -> 10k virtual users'],
+  ['c-green',   '+ p99 latency: 38ms  Throughput: 92,400 req/s'],
+  ['c-green',   '+ Error rate: 0.001%  Zero memory leaks'],
+  ['c-cyan',    '> Blue/green deploy to production...'],
+  ['c-green',   '+ v1.0.0 live, 0 downtime, rollback ready'],
+  ['c-muted',   ''],
+  ['c-purple',  '  deepship.dev - Shipped in 6d 14h 22m'],
+];
+const body = document.getElementById('term-body');
+let i = 0;
+function appendLine() {
+  if (i >= lines.length) {
+    setTimeout(() => { body.innerHTML = '<span class="cursor"></span>'; i = 0; appendLine(); }, 3000);
+    return;
+  }
+  const [cls, text] = lines[i++];
+  const span = document.createElement('span');
+  span.className = 'line ' + cls;
+  span.textContent = text;
+  body.insertBefore(span, body.lastChild);
+  requestAnimationFrame(() => span.classList.add('show'));
+  setTimeout(appendLine, text === '' ? 200 : 420);
+}
+setTimeout(appendLine, 800);
+
+/* ── Scroll reveal ───────────────────────────────────── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+/* ── Counter animation ───────────────────────────────── */
+function animateCounter(el, target, suffix) {
+  const duration = 1800;
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.floor(target * ease) + suffix;
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+const statObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const t = parseFloat(e.target.dataset.target);
+      const s = t === 20 ? 'x' : t === 1 ? ' wk' : '%';
+      animateCounter(e.target, t, s);
+      statObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-num').forEach(el => statObs.observe(el));
+
+/* ── Typewriter ──────────────────────────────────────── */
+const tw = document.getElementById('typewriter');
+const words = ['1 Week','Record Time','Days','Lightning Speed'];
+let wi = 0, ci = 0, deleting = false;
+function typeLoop() {
+  const word = words[wi];
+  if (!deleting) {
+    tw.textContent = word.slice(0, ++ci);
+    if (ci === word.length) { deleting = true; setTimeout(typeLoop, 2000); return; }
+  } else {
+    tw.textContent = word.slice(0, --ci);
+    if (ci === 0) { deleting = false; wi = (wi + 1) % words.length; }
+  }
+  setTimeout(typeLoop, deleting ? 60 : 90);
+}
+setTimeout(typeLoop, 1200);
+</script>
+</body>
+</html>
